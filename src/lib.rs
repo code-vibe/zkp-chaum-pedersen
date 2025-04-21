@@ -1,5 +1,4 @@
-use num_bigint::{BigInt, BigUint};
-
+use num_bigint::{RandBigInt, BigUint};
 //alpha^x mod p
 //Output  = number*exp mod p
 pub fn exponentiate(number : &BigUint, exponent : &BigUint, modulus: &BigUint) -> BigUint {
@@ -7,11 +6,11 @@ pub fn exponentiate(number : &BigUint, exponent : &BigUint, modulus: &BigUint) -
 }
 
 //output = s= k - c * x mod q
-pub fn solve (K : &BigUint, C : &BigUint, X: &BigUint, q: &BigUint) -> BigUint {
-        if *K >= C*X {
-            (K-C*X).modpow(&BigUint::from(1u32), q);
+pub fn solve (k: &BigUint, c: &BigUint, x: &BigUint, q: &BigUint) -> BigUint {
+        if *k >= c * x {
+            (k - c * x).modpow(&BigUint::from(1u32), q);
         }
-    q- (C * X - K).modpow(&BigUint::from(1u32), q)
+    q- (c * x - k).modpow(&BigUint::from(1u32), q)
 }
 
 //cond1 = r1 = alpha^s * y1^c
@@ -21,6 +20,11 @@ pub fn verify (r1 : &BigUint, r2 : &BigUint, y1: &BigUint, y2: &BigUint, alpha: 
     let cond2 = *r2 == (beta.modpow(s,modulus) * y2.modpow(c,modulus)).modpow(&BigUint::from(1u32), &modulus);
 
     cond1 && cond2
+}
+
+pub fn generate_random_below(bound: &BigUint) -> BigUint {
+    let mut rng = rand::thread_rng();
+    rng.gen_biguint_below(bound)
 }
 
 #[cfg(test)]
@@ -34,9 +38,9 @@ mod test {
         let q = BigUint::from(11u32);
 
         let x = BigUint::from(6u32);
-        let k = BigUint::from(7u32);
+        let k = generate_random_below(&modulus);
 
-        let c= BigUint::from(4u32);
+        let c=generate_random_below(&modulus);
 
         let y1 = exponentiate(&alpha,&x,&modulus);
         let y2 = exponentiate(&beta,&x,&modulus);
@@ -57,6 +61,7 @@ mod test {
         assert!(result);
 
         //Compute fake secret
+        //s = k -c * x mod q
         let x_fake = BigUint::from(7u32);
         let s_fake = solve(&k,&c, &x_fake, &q);
         assert_eq!(s, BigUint::from(5u32));

@@ -1,7 +1,7 @@
 # === Rust build artifacts ===
 /target/
 **/*.rs.bk
-
+src/zkp_auth.rs
 # === Cargo-related ===
 Cargo.toml.orig
 

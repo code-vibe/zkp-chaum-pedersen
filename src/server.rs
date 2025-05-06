@@ -61,7 +61,7 @@ impl Auth for AuthImpl {
             let c = ZKP::generate_random_below(&q);
 
             let c = BigUint::from(666u32);
-            let auth_id = "skdjfsk".to_string();
+            let auth_id = ZKP::generate_random_string(12);
 
             let mut auth_id_to_username = &mut self.auth_id_to_username.lock().unwrap();
             auth_id_to_username.insert(auth_id.clone(), user_info.username.clone());
@@ -78,8 +78,58 @@ impl Auth for AuthImpl {
             ))
         }
     }
-    async fn verify_authentication(&self, request: Request<AuthenticationAnswerRequest>) -> Result<Response<AuthenticationAnswerResponse>, Status> {
-        todo!()
+    async fn verify_authentication(
+        &self,
+        request: Request<AuthenticationAnswerRequest>,
+    ) -> Result<Response<AuthenticationAnswerResponse>, Status> {
+        let request = request.into_inner();
+
+        let auth_id = request.auth_id;
+        println!("Processing Challenge Solution auth_id: {:?}", auth_id);
+
+        let auth_id_to_user_hashmap = &mut self.auth_id_to_username.lock().unwrap();
+
+        if let Some(user_name) = auth_id_to_user_hashmap.get(&auth_id) {
+            let user_info_hashmap = &mut self.user_info.lock().unwrap();
+            let user_info = user_info_hashmap
+                .get_mut(user_name)
+                .expect("AuthId not found on hashmap");
+
+            let s = BigUint::from_bytes_be(&request.s);
+            user_info.s = s;
+
+            let (alpha, beta, p, q) = ZKP::get_constants();
+            let zkp = ZKP { alpha, beta, p, q };
+
+            let verification = zkp.verify(
+                &user_info.r1,
+                &user_info.r2,
+                &user_info.y1,
+                &user_info.y2,
+                &user_info.c,
+                &user_info.s,
+            );
+
+            if verification {
+                let session_id = ZKP::generate_random_string(12);
+
+                println!("✅ Correct Challenge Solution username: {:?}", user_name);
+
+                Ok(Response::new(AuthenticationAnswerResponse { session_id }))
+            } else {
+                println!("❌ Wrong Challenge Solution username: {:?}", user_name);
+
+                Err(Status::new(
+                    Code::PermissionDenied,
+                    format!("AuthId: {} bad solution to the challenge", auth_id),
+                ))
+            }
+        } else {
+            Err(Status::new(
+                Code::NotFound,
+                format!("AuthId: {} not found in database", auth_id),
+            ))
+        }
     }
 }
 #[tokio::main]

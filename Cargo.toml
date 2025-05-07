@@ -3,6 +3,7 @@ name = "zkp-chaum-pedersen"
 version = "0.1.0"
 edition = "2021"
 
+
 [dependencies]
 hex = "0.4.3"
 num-bigint = { version = "0.4.6", features = ["rand"]}

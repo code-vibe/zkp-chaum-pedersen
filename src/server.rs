@@ -33,9 +33,9 @@ pub struct UserInfo {
 #[tonic::async_trait]
 impl Auth for AuthImpl {
     async fn register(&self, request: Request<RegisterRequest>) -> Result<Response<RegisterResponse>, Status> {
-        println!("Processing a register request: {:?}", request);
-        let request = request.into_inner();
 
+        let request = request.into_inner();
+        println!("Processing a register request: {:?}", request.user);
         let mut user_info = UserInfo::default();
 
         user_info.username = request.user.clone();
@@ -47,9 +47,9 @@ impl Auth for AuthImpl {
         Ok(Response::new(RegisterResponse {}))
     }
     async fn create_authentication_challenge(&self, request: Request<AuthenticationChallengeRequest>) -> Result<Response<AuthenticationChallengeResponse>, Status> {
-        println!("Processing a create_authentication_challenge request: {:?}", request);
 
         let request = request.into_inner();
+        println!("Processing a create_authentication_challenge request: {:?}", request.user);
         let username = request.user;
         let  user_info_hashmap = &mut self.user_info.lock().unwrap();
 

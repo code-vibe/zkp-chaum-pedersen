@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  zkpserver:
+    build:
+      context: .
+      network: host
+    container_name: zkpserver
+    volumes:
+      - ./:/zkp-server
+    environment:
+      - USER=agentx

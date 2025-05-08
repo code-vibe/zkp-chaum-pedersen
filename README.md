@@ -145,6 +145,34 @@ MIT License. See `LICENSE` file for details.
 Pull requests and discussions are welcome! If you're interested in extending this to support zk-SNARKs or integrating with identity layers, open an issue.
 
 ---
+## 🧱 ZKP gRPC Server (Docker Setup)
+1. **Build the Docker Image**
+
+```bash
+docker build -t zkpserver .
+```
+
+2. **Run the Server**
+
+```bash
+docker run --name zkpserver -p 50051:50051 zkpserver
+```
+
+> ✅ The server should now be running at `127.0.0.1:50051`
+
+---
+
+### 🧪 Test the Server
+#### Using Postman:
+
+1. Install the gRPC beta version of Postman.
+2. Create a new gRPC request.
+3. Set server URL to `localhost:50051`.
+4. Import your `.proto` file and select the service/method.
+5. Input request payload (JSON format).
+6. Send the request and inspect the response.
+
+---
 
 ## 🤝 Future Improvements
 

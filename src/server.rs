@@ -134,7 +134,7 @@ impl Auth for AuthImpl {
 }
 #[tokio::main]
 async fn main() {
-    let address = "127.0.0.1:8080".to_string();
+    let address = "0.0.0.0:50051".to_string();
     println!("Running the server on {}", address);
     let auth_impl = AuthImpl::default();
     Server::builder()

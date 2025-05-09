@@ -2,11 +2,11 @@ version: '3.8'
 
 services:
   zkpserver:
-    build:
-      context: .
-      network: host
-    container_name: zkpserver
+    build: .
     volumes:
       - ./:/zkp-server
     environment:
       - USER=agentx
+    container_name: zkpserver
+    ports:
+      - "50051:50051"  # Expose port 50051 externally

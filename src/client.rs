@@ -22,7 +22,7 @@ async fn main() {
         q: q.clone(),
     };
 
-    let mut client = AuthClient::connect("http://127.0.0.1:8080")
+    let mut client = AuthClient::connect("http://0.0.0.0:50051")
         .await
         .expect("could not connect to the server");
     println!("✅ Connected to the server");

@@ -6,6 +6,10 @@ A Rust-based implementation of a Zero-Knowledge Proof (ZKP) authentication proto
 
 ---
 
+## 🧪 ZKP Blog Write Up
+
+You can read more on zkp here
+
 ## 📁 Project Structure
 
 ```txt

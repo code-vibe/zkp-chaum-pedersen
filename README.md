@@ -6,9 +6,11 @@ A Rust-based implementation of a Zero-Knowledge Proof (ZKP) authentication proto
 
 ---
 
-## 🧪 ZKP Blog Write Up
+## 🧪 ZKP Blog Write-Up
 
-You can read more on zkp here
+I recently wrote a blog post exploring Zero-Knowledge Proofs (ZKP), where I dive into how they work and their real-world applications.  
+👉 [Read the full article here](https://code-vibe.github.io/code-vibe/zkpArticle)
+
 
 ## 📁 Project Structure
 
